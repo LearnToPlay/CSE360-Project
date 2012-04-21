@@ -6,11 +6,21 @@ public class QuizContent extends SQLEntity {
 
 	private int questionNumber;
 	private String question;
+	private String answerA;
+	private String answerB;
+	private String answerC;
+	private String answerD;
 	private Answers studentAnswer, correctAnswer;
 	
 	public QuizContent()
 	{
 		question = "Type question here...";
+		question = new String();
+		answerA = new String();
+		answerB = new String();
+		answerC = new String();
+		answerD = new String();
+//		correctAnswer = new Answers();
 	}
 
 	
@@ -30,6 +40,30 @@ public class QuizContent extends SQLEntity {
 
 	public String getQuestion() {
 		return question;
+	}
+	public void setAnswerA(String answer) {
+		this.answerA = answer;
+	}
+	public String getAnswerA() {
+		return answerA;
+	}
+	public void setAnswerB(String answer) {
+		this.answerB = answer;
+	}
+	public String getAnswerB() {
+		return answerB;
+	}
+	public void setAnswerC(String answer) {
+		this.answerC = answer;
+	}
+	public String getAnswerC() {
+		return answerC;
+	}
+	public void setAnswerD(String answer) {
+		this.answerD = answer;
+	}
+	public String getAnswerD() {
+		return answerD;
 	}
 
 	public void setStudentAnswer(Answers answerChoice) {
