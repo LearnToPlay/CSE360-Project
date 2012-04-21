@@ -2,6 +2,10 @@ package edu.asu.cse360.data;
 
 import java.sql.*;
 import java.util.ArrayList;
+<<<<<<< HEAD
+=======
+import java.util.Collections;
+>>>>>>> 5cb929cc8ac103fb609cb934aa437661f1535d49
 
 public class QuizContent extends SQLEntity {
 
@@ -13,6 +17,7 @@ public class QuizContent extends SQLEntity {
 	private String answerB;
 	private String answerC;
 	private String answerD;
+
 	private Answers correctAnswer;
 	
 	public QuizContent() {
@@ -222,6 +227,8 @@ public class QuizContent extends SQLEntity {
 	    	statement.close();
 	    }
 	    
+	    Collections.sort(qContents, new QuizContentComparator());
+	    
 	    SQLEntity.returnConnection(con);
 				
 		return qContents;
@@ -230,13 +237,13 @@ public class QuizContent extends SQLEntity {
 	
 	public static void main(String [] args) {
 		try {
-			QuizContent q = new QuizContent();
+/*			QuizContent q = new QuizContent();
 			
 			q.setQuizName("Quiz 2");
 			q.setQuestionNumber(2);
 			
 			q.delete();
-/*			q.setQuestion("Why are cows always happy?");
+			q.setQuestion("Why are cows always happy?");
 			q.setAnswerA("Crazy?");
 			q.setAnswerB("Stupid?");
 			q.setAnswerC("Republican?");
@@ -263,7 +270,7 @@ public class QuizContent extends SQLEntity {
 //			System.out.println(u.delete());
 			
 			q.commit();
-			
+*/			
 			ArrayList<QuizContent> c = QuizContent.getQuizContents("Quiz 1");
 			
 			for (QuizContent q : c) {
@@ -277,7 +284,7 @@ public class QuizContent extends SQLEntity {
 				System.out.println(q.getCorrectAnswer());
 				System.out.println("\n");
 			}
-*/			
+			
 			
 			
 		} catch (Exception e) {

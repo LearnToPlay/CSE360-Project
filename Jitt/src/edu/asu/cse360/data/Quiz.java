@@ -1,5 +1,9 @@
 package edu.asu.cse360.data;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5cb929cc8ac103fb609cb934aa437661f1535d49
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,7 +98,11 @@ public class Quiz extends SQLEntity {
 	public ArrayList<QuizContent> getContent() {
 		return content;
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 5cb929cc8ac103fb609cb934aa437661f1535d49
 	public int insert() throws SQLException {
 		StringBuffer query = new StringBuffer();
 		if(quizName == null || quizName.length() < 1) {
@@ -115,6 +123,7 @@ public class Quiz extends SQLEntity {
 		query.append("', '");
 		query.append(getClose());
 		query.append("')");
+
 		
 		return super.insert(query.toString());
 	}
@@ -372,5 +381,4 @@ public class Quiz extends SQLEntity {
 			e.printStackTrace();
 		}
 	}
-	
 }

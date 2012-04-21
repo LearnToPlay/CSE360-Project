@@ -174,7 +174,6 @@ public class ViewReportView extends View
 
 
 =======
-
 package edu.asu.cse360.view;
 
 import javax.swing.*;
@@ -348,4 +347,5 @@ public class ViewReportView extends View
     }
 } // end of ViewReportView.java
 
->>>>>>> 5cb929cc8ac103fb609cb934aa437661f1535d49
+
+>>>>>>> 740b003273b3064d2e2731216538b2078bc7a60d
