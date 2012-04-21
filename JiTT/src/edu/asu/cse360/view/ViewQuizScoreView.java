@@ -3,6 +3,8 @@ package edu.asu.cse360.view;
 import java.awt.Color;
 import javax.swing.JLabel;
 
+import edu.asu.cse360.data.QuizContent;
+
 public class ViewQuizScoreView extends View {
 
 	private static final long serialVersionUID = 1L;
@@ -11,7 +13,7 @@ public class ViewQuizScoreView extends View {
 	final private Color right = Color.green, wrong = Color.red;
 	
 	private JLabel earnedPoints, totalPoints, quizName, instructions,
-					questionNumber, question, ABCorD, studentAnswer;
+					questionNumber, question, Astr, Bstr, Cstr, Dstr, ABCorD, studentAnswer;
 	
 	
 	
@@ -42,8 +44,8 @@ public void setQuestionNumber(int questionNumber) {
 }
 
 
-public void setQuestion(String question) {
-	this.question.setText(question);
+public void setQuestion(String string) {
+	this.question.setText(string);
 }
 
 
@@ -54,6 +56,30 @@ public void setABCorD(char ABCorD) {
 
 public void setStudentAnswer(char studentAnswer) {
 	this.studentAnswer.setText(Character.toString(studentAnswer));
+}
+
+
+public void setAstr(String string) {
+	// TODO Auto-generated method stub
+	this.Astr.setText(string);
+}
+
+
+public void setBstr(String string) {
+	// TODO Auto-generated method stub
+	this.Bstr.setText(string);
+}
+
+
+public void setCstr(String string) {
+	// TODO Auto-generated method stub
+	this.Cstr.setText(string);
+}
+
+
+public void setDstr(String string) {
+	// TODO Auto-generated method stub
+	this.Dstr.setText(string);
 }
 
 
