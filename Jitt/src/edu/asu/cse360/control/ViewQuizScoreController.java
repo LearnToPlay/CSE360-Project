@@ -32,9 +32,9 @@ public class ViewQuizScoreController extends Controller {
 			((ViewQuizScoreView) VIEW).setQuestion(content.get(i).getQuestion());
 			
 			((ViewQuizScoreView)VIEW).setAstr("a) " + content.get(i).getAnswerA());	
-			((ViewQuizScoreView)VIEW).setAstr("b) " + ((ViewQuizScoreModel) MODEL).getAnswerChoice(i));	
-			((ViewQuizScoreView)VIEW).setAstr("c) " + ((ViewQuizScoreModel) MODEL).getAnswerChoice(i));
-			((ViewQuizScoreView)VIEW).setAstr("d) " + ((ViewQuizScoreModel) MODEL).getAnswerChoice(i));
+			((ViewQuizScoreView)VIEW).setBstr("b) " + content.get(i).getAnswerB());	
+			((ViewQuizScoreView)VIEW).setCstr("c) " + content.get(i).getAnswerC());	
+			((ViewQuizScoreView)VIEW).setDstr("d) " + content.get(i).getAnswerD());	
 		}
 		
 		
