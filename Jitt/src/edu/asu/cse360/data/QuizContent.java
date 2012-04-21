@@ -2,10 +2,7 @@ package edu.asu.cse360.data;
 
 import java.sql.*;
 import java.util.ArrayList;
-<<<<<<< HEAD
-=======
 import java.util.Collections;
->>>>>>> 5cb929cc8ac103fb609cb934aa437661f1535d49
 
 public class QuizContent extends SQLEntity {
 
