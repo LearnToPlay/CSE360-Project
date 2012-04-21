@@ -1,23 +1,41 @@
-Before working on the project you must pull all the new commits. 
+/************** WampServer 2.2 **********************/
+Import Warren's data.jar file into your jitt project on Eclipse.
+	This should have the entity files with main() methods for unit testing.
+	Refer to these main() methods to see how to use them.
+
+Start up Wamp and make sure the icon in the lower left corner is green.
+Click on that icon and go to phpMyAdmin. From Warren's email:
+
+  "From the main page click on the SQL 'tab' and copy all the contents
+   of the localhost.sql file and paste them into the SQL window in WAMP
+   and click the 'Go' button."
+
+You should get a new database called jitt.
+Go to it by clicking on the sidebar to the left or by clicking the database tab.
+You'll see the database tables Warren's made.
+From this screen you can click "Insert" to add data to whatever table.
+When clicking on a Table, you'll be able to "Edit", "Copy", or "Delete" the data you added.
+
+
+/************** Working on GitHub *******************/
+
+Before working on the project and pushing, you must pull all the new commits. 
 Here's how:
 
   cd ./CSE360-Project
-? git remote add upstream git://github.com/LearnToPlay/CSE360-Project
   git fetch upstream
   git merge upstream/master
 
 
-After (Forking, Cloning,) Fixing, Fetching and Merging: (watch for 'username')
+After Fetching and Merging:
 
   git add -A
   git commit -m 'Your message here'
-  git push git@github.com:username/CSE360-Project.git
+  git push origin master
 
-Then go to username/CSE360-Project and send a Pull Request.
 DONE!
 
-There's probably an easier way (shorter) to do this line:
-  git push git@github.com:username/CSE360-Project.git
-I'm just not sure what it is.
+To change the remote 'origin':
+  git remote set-url origin git@github.com:LearnToPlay/CSE360-Project.git
   
 

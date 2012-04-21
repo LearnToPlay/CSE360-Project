@@ -1,7 +1,11 @@
 package edu.asu.cse360.data;
 
+<<<<<<< HEAD
 import java.sql.*;
 import java.util.ArrayList;
+=======
+import java.sql.ResultSet;
+>>>>>>> 740b003273b3064d2e2731216538b2078bc7a60d
 
 public class QuizContent extends SQLEntity {
 
@@ -95,6 +99,7 @@ public class QuizContent extends SQLEntity {
 		return correctAnswer;
 	}
 
+<<<<<<< HEAD
 	public int insert() throws SQLException {
 		StringBuffer query =new StringBuffer();
 		
@@ -283,6 +288,37 @@ public class QuizContent extends SQLEntity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+=======
+
+
+/*** SQL Methods ***/
+
+	@Override
+	public int insert() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int update() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int delete() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public ResultSet select(String str) {
+		// TODO Auto-generated method stub
+		return null;
+>>>>>>> 740b003273b3064d2e2731216538b2078bc7a60d
 	}
 	
 }

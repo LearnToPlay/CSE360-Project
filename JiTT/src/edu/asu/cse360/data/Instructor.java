@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package edu.asu.cse360.data;
 
 import java.sql.Connection;
@@ -62,3 +63,45 @@ public class Instructor extends User {
 	}
 
 }
+=======
+package edu.asu.cse360.data;
+
+import java.sql.ResultSet;
+
+public class Instructor extends User {
+
+	public Instructor()
+	{
+		isInstructor = true;
+	}
+	
+	
+	
+	
+/*** SQL Methods ***/
+	@Override
+	public int insert() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int delete() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ResultSet select(String str) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
+>>>>>>> 740b003273b3064d2e2731216538b2078bc7a60d

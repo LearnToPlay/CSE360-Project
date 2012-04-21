@@ -1,6 +1,11 @@
 package edu.asu.cse360.data;
 
+<<<<<<< HEAD
 import java.sql.*;
+=======
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+>>>>>>> 740b003273b3064d2e2731216538b2078bc7a60d
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,14 +13,26 @@ import java.util.List;
 public class Quiz extends SQLEntity {
 
 	private String quizName, courseName;
+<<<<<<< HEAD
 	private static final String instructions = "Read the following questions and click on a response. " +
 			"You have 20 minutes to complete the quiz.";
+=======
+>>>>>>> 740b003273b3064d2e2731216538b2078bc7a60d
 	private int numberOfQuestions;
 	private java.sql.Timestamp open, close;
 	private ArrayList<QuizContent> content = new ArrayList<QuizContent>();
+	final static private String instructions = "Read the following questions and click on a response. " +
+	"You have 20 minutes to complete the quiz.";
 	
+<<<<<<< HEAD
 	public Quiz() {
 		
+=======
+	public Quiz()
+	{
+		quizName = "Quiz Name";
+		courseName = "New Course";			
+>>>>>>> 740b003273b3064d2e2731216538b2078bc7a60d
 	}
 	
 	public void addContent(QuizContent qc) {
@@ -48,11 +65,15 @@ public class Quiz extends SQLEntity {
 	}
 
 	public String getCourseName() {
+<<<<<<< HEAD
 		if (courseName == null) {
 			return "";
 		} else {
 			return courseName;
 		}
+=======
+		return courseName;
+>>>>>>> 740b003273b3064d2e2731216538b2078bc7a60d
 	}
 
 	public String getInstructions() {
@@ -95,6 +116,7 @@ public class Quiz extends SQLEntity {
 		return content;
 	}
 
+<<<<<<< HEAD
 	public int insert() throws SQLException {
 		StringBuffer query = new StringBuffer();
 		if(quizName == null || quizName.length() < 1) {
@@ -371,6 +393,39 @@ public class Quiz extends SQLEntity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+=======
+	public String getAnswerChoice(Answers question) 
+	{
+		
+		return null;
+	}
+
+
+/*** SQL Methods ***/
+	
+	@Override
+	public int insert() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int delete() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ResultSet select(String str) {
+		// TODO Auto-generated method stub
+		return null;
+>>>>>>> 740b003273b3064d2e2731216538b2078bc7a60d
 	}
 	
 }
