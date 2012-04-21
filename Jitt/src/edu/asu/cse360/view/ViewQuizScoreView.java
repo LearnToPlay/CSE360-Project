@@ -3,6 +3,8 @@ package edu.asu.cse360.view;
 import java.awt.Color;
 import javax.swing.JLabel;
 
+import edu.asu.cse360.data.QuizContent;
+
 public class ViewQuizScoreView extends View {
 
 	private static final long serialVersionUID = 1L;
@@ -42,8 +44,8 @@ public void setQuestionNumber(int questionNumber) {
 }
 
 
-public void setQuestion(String question) {
-	this.question.setText(question);
+public void setQuestion(String string) {
+	this.question.setText(string);
 }
 
 
