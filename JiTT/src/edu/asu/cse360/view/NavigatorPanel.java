@@ -1,11 +1,13 @@
 
 package edu.asu.cse360.view;
 
+import edu.asu.cse360.model.*;
+import edu.asu.cse360.control.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import edu.asu.cse360.model.*;
-import edu.asu.cse360.control.*;
+import javax.swing.tree.*;
+import javax.swing.event.*;
 
 public class NavigatorPanel extends JFrame
 {
@@ -16,10 +18,10 @@ public class NavigatorPanel extends JFrame
     final static String CARDPANEL3 = "View Quiz Report";
     final static String CARDPANEL4 = "Take Quiz";
     final static String CARDPANEL5 = "View Quiz Scores";
-    JPanel cards; //a panel that uses CardLayout
-    JComboBox CreateCourseButton, ViewReportButton,
-    		TakeQuizButton, ViewScoresButton;
+    JTree CreateCourseTree, ViewReportTree,
+    		TakeQuizTree, ViewScoresTree;
     JButton CreateQuizButton, LogoutButton;
+	JPanel htmlPane; // will replace cards
 
     public void addComponentToPane(Container pane)
     {
@@ -35,7 +37,9 @@ public class NavigatorPanel extends JFrame
         upperPane.add(temp, BorderLayout.EAST);
         
         // Navigation Buttons. JMenu, JTree or whatever works best...
-        JPanel navigationPane = new JPanel();
+        JScrollPane navigationPane = new JScrollPane();
+        
+        // Authentication a = new Authentication();
         
         boolean redo = true;
         while(redo)
@@ -51,160 +55,283 @@ public class NavigatorPanel extends JFrame
 	        		);
 	        if(s.compareToIgnoreCase("instructor") == 0)
 	        {
-	        	navigationPane = makeInstructor();
+	        	//navigationPane = makeInstructor();
+	        	navigationPane = createInstructorTree();
 	        	redo = false;
 	        }
 	        else if(s.compareToIgnoreCase("student") == 0)
 	        {
-	            navigationPane = makeStudent();
+	            navigationPane = createStudentTree();
 	            redo = false;
 	        }
 	        else
 	        	redo = true;
         }
         
-        // CardLayout's not really good idea...
-        cards = new JPanel(new CardLayout());
-        
+        htmlPane = new JPanel();
+        htmlPane.add(new JLabel("Welcome page"));
+        JScrollPane htmlView = new JScrollPane(htmlPane);
+
+        //Add the scroll panes to a split pane.
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setTopComponent(navigationPane);
+        splitPane.setBottomComponent(htmlView);
+
+        Dimension minimumSize = new Dimension(100, 50);
+        htmlView.setMinimumSize(minimumSize);
+        navigationPane.setMinimumSize(minimumSize);
+        splitPane.setDividerLocation(150); 
+        splitPane.setPreferredSize(new Dimension(600, 300));
+
         // put everything together
         pane.add(upperPane, BorderLayout.NORTH);
-        pane.add(navigationPane, BorderLayout.WEST);
-        pane.add(cards, BorderLayout.CENTER);
+        pane.add(splitPane, BorderLayout.CENTER);
     }
     
-    private JPanel makeInstructor()
+    private JScrollPane createInstructorTree()
     {
-        // Instructor uses:
-        CreateCourseButton = new JComboBox();
-        CreateCourseButton.addItem(CARDPANEL1);
-        // add created courses (in the case of edits)
-        CreateCourseButton.addItem("Create New Course");
-        CreateCourseButton.addItem("Edit Temp Course 1");
-        CreateCourseButton.addItem("Edit Temp Course 2");
+        // Create the nodes and a tree that allows one selection at a time.
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Edit a Course");
+        createCourseNodes(top);
+        CreateCourseTree = new JTree(top);
+        CreateCourseTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        CreateCourseTree.addTreeSelectionListener(new TreeListener()); //Listen for when the selection changes.
         
+        // Create Quiz Button
         CreateQuizButton = new JButton(CARDPANEL2);
-        
-        ViewReportButton = new JComboBox();
-        ViewReportButton.addItem(CARDPANEL3);
-        // add available quiz reports
-        ViewReportButton.addItem("View Temp Quiz Report 1");
-        ViewReportButton.addItem("View Temp Quiz Report 2");
-        ViewReportButton.addItem("View Temp Quiz Report 3");
-        
-        CreateCourseButton.addActionListener(new ButtonListener());
         CreateQuizButton.addActionListener(new ButtonListener());
-        ViewReportButton.addActionListener(new ButtonListener());
-        JPanel flow1 = new JPanel();
-        JPanel flow2 = new JPanel();
-        JPanel flow3 = new JPanel();
-        flow1.add(CreateCourseButton);
-        flow2.add(CreateQuizButton);
-        flow3.add(ViewReportButton);
+        JPanel flow = new JPanel();
+        flow.add(CreateQuizButton);
+
+        DefaultMutableTreeNode top2 = new DefaultMutableTreeNode("View Quiz Report");
+        viewQuizReportNodes(top2);
+        ViewReportTree = new JTree(top2);
+        ViewReportTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        ViewReportTree.addTreeSelectionListener(new TreeListener()); //Listen for when the selection changes.
+                
+        //Create the scroll pane and add the tree to it.
+        JPanel treeView = new JPanel();
+        treeView.setLayout(new GridLayout(3,1));
+        treeView.add(CreateCourseTree);
+        treeView.add(flow);
+        treeView.add(ViewReportTree);
+        JScrollPane toReturn = new JScrollPane(treeView);
         
-        JPanel toReturn = new JPanel();
-        toReturn.setLayout(new BoxLayout(toReturn, BoxLayout.Y_AXIS));
-        toReturn.add(flow1);
-        toReturn.add(flow2);
-        toReturn.add(flow3);
         return toReturn;
     }
     
-    public JPanel makeStudent()
+    private JScrollPane createStudentTree()
     {
-        // Student uses:
-        TakeQuizButton = new JComboBox();
-        TakeQuizButton.addItem(CARDPANEL4);
-        // add available quizzes to take
-        TakeQuizButton.addItem("Take Temp Quiz 1");
-        TakeQuizButton.addItem("Take Temp Quiz 2");
-        TakeQuizButton.addItem("Take Temp Quiz 3");
+        // Create the nodes and a tree that allows one selection at a time.
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Take a Quiz");
+        takeQuizNodes(top);
+        TakeQuizTree = new JTree(top);
+        TakeQuizTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        TakeQuizTree.addTreeSelectionListener(new TreeListener()); //Listen for when the selection changes.
 
-        ViewScoresButton = new JComboBox();
-        ViewScoresButton.addItem(CARDPANEL5);
-        // add available quizzes to view
-        ViewScoresButton.addItem("View Temp Quiz Scores 1");
-        ViewScoresButton.addItem("View Temp Quiz Scores 2");
-        ViewScoresButton.addItem("View Temp Quiz Scores 3");
+        DefaultMutableTreeNode top2 = new DefaultMutableTreeNode("View Quiz Score");
+        viewQuizScoreNodes(top2);
+        ViewScoresTree = new JTree(top2);
+        ViewScoresTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        ViewScoresTree.addTreeSelectionListener(new TreeListener()); //Listen for when the selection changes.
+                
+        //Create the scroll pane and add the tree to it.
+        JPanel treeView = new JPanel();
+        treeView.setLayout(new GridLayout(2,1));
+        treeView.add(TakeQuizTree);
+        treeView.add(ViewScoresTree);
+        JScrollPane toReturn = new JScrollPane(treeView);
         
-        TakeQuizButton.addActionListener(new ButtonListener());
-        ViewScoresButton.addActionListener(new ButtonListener());
-        JPanel flow1 = new JPanel();
-        JPanel flow2 = new JPanel();
-        flow1.add(TakeQuizButton);
-        flow2.add(ViewScoresButton);
-        
-        JPanel toReturn = new JPanel(new GridLayout(2,1));
-        toReturn.setLayout(new BoxLayout(toReturn, BoxLayout.Y_AXIS));
-        toReturn.add(flow1);
-        toReturn.add(flow2);
         return toReturn;
+    }
+    
+    private void displayURL(String url, String courseName, String quizName)
+    {
+    	System.out.println("Viewing: " + url + "\nCourse: " + courseName + "\nQuiz: " + quizName);
+    	while(htmlPane.getComponentCount() != 0)
+    		htmlPane.remove(htmlPane.getComponent(0));
+    	
+    	View view = new View();
+
+    	// TODO: send message to create each UI
+    	if(url == CARDPANEL1)
+        {
+    		// Code for setting up Model, View Controller:
+        	Model model = new CreateCourseMod();
+        	view = new CreateCourseView();
+        	Controller CreateCourseCtrl = new CreateCourseCtrl(model, view);
+        }
+        else if(url == CARDPANEL2)
+        {
+        //   JPanel CreateQuizCard = new CreateQuizView();
+            // CreateQuizCard.add(new JLabel("Create Quiz View Panel"));
+             Model createQuizModel = new CreateQuizMod();
+             view = new CreateQuizView();
+             Controller createQuizController = new CreateQuizCtrl(createQuizModel,view);
+            // createQuizController.attachButtons();
+           // createQuizController.attachButtons();
+        }
+        else if(url == CARDPANEL3)
+        {
+        	// Code for setting up Model, View Controller:
+        	Model ViewReportModel = new ViewReportMod();
+        	view = new ViewReportView();
+        	Controller ViewReportController = new ViewReportCtrl(ViewReportModel, view);
+        	
+        	// Call Controller method
+        	//String reportName = (String)ViewReportButton.getSelectedItem();
+        	((ViewReportCtrl)ViewReportController).generateReport(quizName);
+        }
+        else if(url == CARDPANEL4)
+        {
+            view.add(new JLabel("Take Quiz View Panel"));
+        }
+        else if(url == CARDPANEL5)
+        {
+        	// Code for setting up Model, View Controller:
+        	Model model = new ViewQuizScoreModel();
+        	view = new ViewQuizScoreView();
+        	Controller controller = new ViewQuizScoreController(model, view); 
+        	
+        	// Call Controller method
+        	//String scoreName = (String)ViewScoresButton.getSelectedItem();
+        	//((ViewQuizScoreController)controller).generateScore(scoreName);
+        }
+    	
+    	htmlPane.add(view);
+    	htmlPane.updateUI(); // validate() or revalidate() ?
+    }
+
+    private void createCourseNodes(DefaultMutableTreeNode top)
+    {
+    	// TODO: get from Database the courses
+    	/** dummy data first course **/
+        DefaultMutableTreeNode category = new DefaultMutableTreeNode("Course 1");
+        top.add(category);
+        DefaultMutableTreeNode book = new DefaultMutableTreeNode("Student 1");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Student 2");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Student 3");
+        category.add(book);
+        /** more dummy data **/
+        category = new DefaultMutableTreeNode("Course 2");
+        top.add(category);
+        book = new DefaultMutableTreeNode("Student 4");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Student 5");
+        category.add(book);
+    }
+    
+    private void viewQuizReportNodes(DefaultMutableTreeNode top)
+    {
+    	// TODO: get from Database the reports
+    	/** dummy data first course **/
+        DefaultMutableTreeNode category = new DefaultMutableTreeNode("Course 1");
+        top.add(category);
+        DefaultMutableTreeNode book = new DefaultMutableTreeNode("Quiz Report 1");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Quiz Report 2");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Quiz Report 3");
+        category.add(book);
+        /** more dummy data **/
+        category = new DefaultMutableTreeNode("Course 2");
+        top.add(category);
+        book = new DefaultMutableTreeNode("Quiz Report 4");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Quiz Report 5");
+        category.add(book);
+    }
+
+    private void takeQuizNodes(DefaultMutableTreeNode top)
+    {
+    	// TODO: get from Database
+    	/** dummy data first course **/
+        DefaultMutableTreeNode category = new DefaultMutableTreeNode("Course 1");
+        top.add(category);
+        DefaultMutableTreeNode book = new DefaultMutableTreeNode("Quiz 1");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Quiz 2");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Quiz 3");
+        category.add(book);
+        /** more dummy data **/
+        category = new DefaultMutableTreeNode("Course 2");
+        top.add(category);
+        book = new DefaultMutableTreeNode("Quiz 4");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Quiz 5");
+        category.add(book);
+    }
+
+    private void viewQuizScoreNodes(DefaultMutableTreeNode top)
+    {
+    	// TODO: get from Database
+    	/** dummy data first course **/
+        DefaultMutableTreeNode category = new DefaultMutableTreeNode("Course 1");
+        top.add(category);
+        DefaultMutableTreeNode book = new DefaultMutableTreeNode("Quiz Scores 1");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Quiz Scores 2");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Quiz Scores 3");
+        category.add(book);
+        /** more dummy data **/
+        category = new DefaultMutableTreeNode("Course 2");
+        top.add(category);
+        book = new DefaultMutableTreeNode("Quiz Scores 4");
+        category.add(book);
+        book = new DefaultMutableTreeNode("Quiz Scores 5");
+        category.add(book);
+    }
+
+    private class TreeListener implements TreeSelectionListener
+    {
+        /** Required by TreeSelectionListener interface. */
+        public void valueChanged(TreeSelectionEvent e)
+        {
+        	String toShow = "";
+        	DefaultMutableTreeNode node = new DefaultMutableTreeNode();
+        	
+        	if(e.getSource() == CreateCourseTree)
+        	{
+    	        node = (DefaultMutableTreeNode)CreateCourseTree.getLastSelectedPathComponent();
+    	        toShow = CARDPANEL1;
+        	}
+        	else if(e.getSource() == ViewReportTree)
+        	{
+    	        node = (DefaultMutableTreeNode)ViewReportTree.getLastSelectedPathComponent();
+    	        toShow = CARDPANEL3;
+        	}
+        	else if(e.getSource() == TakeQuizTree)
+        	{
+    	        node = (DefaultMutableTreeNode)ViewReportTree.getLastSelectedPathComponent();
+    	        toShow = CARDPANEL4;
+        	}
+        	else if(e.getSource() == ViewScoresTree)
+        	{
+    	        node = (DefaultMutableTreeNode)ViewReportTree.getLastSelectedPathComponent();
+    	        toShow = CARDPANEL5;
+        	}
+        	else
+        	{
+        		System.out.println("error, unknown tree source");
+        	}
+        	
+        	if (node == null) return;
+        	
+	        if (node.isLeaf())
+	            displayURL(toShow, node.getParent().toString(), node.toString());
+        }
     }
 
     private class ButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
         {
-        	// specific cards are identified by their names (Strings)
-            String toShow = "";
-        	if(e.getSource() == CreateCourseButton)
-            {
-        		// Code for setting up Model, View Controller:
-            	Model model = new CreateCourseMod();
-            	View view = new CreateCourseView();
-            	Controller CreateCourseCtrl = new CreateCourseCtrl(model, view);
-            	
-            	cards.add(view, CARDPANEL1);
-                toShow = CARDPANEL1;
-            }
-            else if(e.getSource() == CreateQuizButton)
-            {
-           //   JPanel CreateQuizCard = new CreateQuizView();
-                // CreateQuizCard.add(new JLabel("Create Quiz View Panel"));
-                 Model createQuizModel = new CreateQuizMod();
-                 View createQuizUI = new CreateQuizView();
-                 Controller createQuizController = new CreateQuizCtrl(createQuizModel,createQuizUI);
-                // createQuizController.attachButtons();
-               // createQuizController.attachButtons(); 
-                 cards.add(createQuizUI, CARDPANEL2);
-                toShow = CARDPANEL2;
-            }
-            else if(e.getSource() == ViewReportButton)
-            {
-            	// Code for setting up Model, View Controller:
-            	Model ViewReportModel = new ViewReportMod();
-            	View ViewReportUI = new ViewReportView();
-            	Controller ViewReportController = new ViewReportCtrl(ViewReportModel, ViewReportUI);
-            	
-            	// Call Controller method
-            	String reportName = (String)ViewReportButton.getSelectedItem();
-            	((ViewReportCtrl)ViewReportController).generateReport(reportName);
-            	
-            	// add to Navigator's ViewPanel
-            	cards.add(ViewReportUI, CARDPANEL3);
-            	toShow = CARDPANEL3;
-            }
-            else if(e.getSource() == TakeQuizButton)
-            {
-                JPanel TakeQuizCard = new JPanel();
-                TakeQuizCard.add(new JLabel("Take Quiz View Panel"));
-                cards.add(TakeQuizCard, CARDPANEL4);
-                toShow = CARDPANEL4;
-            }
-            else if(e.getSource() == ViewScoresButton)
-            {
-            	// Code for setting up Model, View Controller:
-            	Model model = new ViewQuizScoreModel();
-            	View view = new ViewQuizScoreView();
-            	Controller controller = new ViewQuizScoreController(model, view); 
-            	
-            	// Call Controller method
-            	String scoreName = (String)ViewScoresButton.getSelectedItem();
-            	((ViewQuizScoreController)controller).generateScore(scoreName);
-            	
-            	// add to Navigator's ViewPanel
-                cards.add(view, CARDPANEL5);
-                toShow = CARDPANEL5;
-            }
+          	if(e.getSource() == CreateQuizButton)
+                 displayURL(CARDPANEL2, "No Course", "No Quiz");
             else if(e.getSource() == LogoutButton)
             {
             	System.out.println("logging off");
@@ -215,10 +342,6 @@ public class NavigatorPanel extends JFrame
             {
                 System.out.println("Unknown Source");
             }
-            CardLayout c1 = (CardLayout)cards.getLayout();
-            c1.first(cards); // for first click
-            c1.show(cards, toShow);
-            //System.out.println("You Clicked " + toShow); // for debugging
         }
     }
 }
