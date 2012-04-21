@@ -1,40 +1,64 @@
 package edu.asu.cse360.data;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 public class Instructor extends User {
-
-	public Instructor()
-	{
-		isInstructor = true;
-	}
 	
-	
-	
-	
-/*** SQL Methods ***/
-	@Override
-	public int insert() {
-		// TODO Auto-generated method stub
-		return 0;
+	public Instructor() throws ClassNotFoundException {
+		super();
+		setInstructor(true);
 	}
 
-	@Override
-	public int update() {
-		// TODO Auto-generated method stub
-		return 0;
+	public static ArrayList<Instructor> getAllInstructors() throws Exception {
+		ArrayList<Instructor> instructors = new ArrayList<Instructor>();
+		StringBuffer query = new StringBuffer();
+		query.append("SELECT `username`, `last`, `first`, `isInstructor` FROM `user` WHERE `isInstructor`= 1");
+		
+		ResultSet results = null;
+		Connection con = getConnection();
+		// issue the SQL query to the database
+	    Statement statement = con.createStatement();
+	    // get the result of the SQL query
+	    results = statement.executeQuery(query.toString());
+	    
+		while (results.next()) {
+			Instructor i = new Instructor();
+			i.setUserName(results.getString("username"));
+			i.setLastName(results.getString("last"));
+			i.setFirstName(results.getString("first"));
+			instructors.add(i);
+		}
+		
+	    if(statement != null) {
+	    	statement.close();
+	    }
+	    
+	    SQLEntity.returnConnection(con);
+				
+		return instructors;
 	}
-
-	@Override
-	public int delete() {
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		return 0;
-	}
+		
+		try {
+			ArrayList<Instructor> ins = Instructor.getAllInstructors();
+			
+			for (Instructor i : ins) {
+				System.out.println(i.getUserName());
+				System.out.println(i.getFirstName());
+				System.out.println(i.getLastName());
+				System.out.println(i.isInstructor());
+			}
+		} catch (Exception e) {
+			
+		}
 
-	@Override
-	public ResultSet select(String str) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

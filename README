@@ -1,3 +1,24 @@
+/************** WampServer 2.2 **********************/
+Import Warren's data.jar file into your jitt project on Eclipse.
+	This should have the entity files with main() methods for unit testing.
+	Refer to these main() methods to see how to use them.
+
+Start up Wamp and make sure the icon in the lower left corner is green.
+Click on that icon and go to phpMyAdmin. From Warren's email:
+
+  "From the main page click on the SQL 'tab' and copy all the contents
+   of the localhost.sql file and paste them into the SQL window in WAMP
+   and click the 'Go' button."
+
+You should get a new database called jitt.
+Go to it by clicking on the sidebar to the left or by clicking the database tab.
+You'll see the database tables Warren's made.
+From this screen you can click "Insert" to add data to whatever table.
+When clicking on a Table, you'll be able to "Edit", "Copy", or "Delete" the data you added.
+
+
+/************** Working on GitHub *******************/
+
 Before working on the project and pushing, you must pull all the new commits. 
 Here's how:
 
