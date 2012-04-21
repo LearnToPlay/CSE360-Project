@@ -35,7 +35,8 @@ public class ViewQuizScoreModel extends Model {
 	
 	public String getAnswerChoice(Answers question)
 	{
-		return quiz.getAnswerChoice(question);
+		//return quiz.getAnswerChoice(question);
+		return "";
 	}
 	
 	public Answers getCorrectAnswer()
