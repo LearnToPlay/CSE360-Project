@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="JiTT/src"/>
-	<classpathentry kind="lib" path="data.jar"/>
-	<classpathentry kind="lib" path="mysql-connector-java-5.1.19-bin.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="output" path="JiTT/bin"/>
-</classpath>
