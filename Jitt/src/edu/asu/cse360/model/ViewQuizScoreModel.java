@@ -33,10 +33,10 @@ public class ViewQuizScoreModel extends Model {
 		return quiz.getInstructions();
 	}
 	
-	public String getAnswerChoice(Answers question)
-	{
-		return quiz.getAnswerChoice(question);
-	}
+//	public String getAnswerChoice(Answers question)
+//	{
+//		return quiz.getAnswerChoice(question);
+//	}
 	
 	public Answers getCorrectAnswer()
 	{
