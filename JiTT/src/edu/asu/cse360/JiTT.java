@@ -3,8 +3,6 @@ import javax.swing.JFrame;
 
 import edu.asu.cse360.view.NavigatorPanel;
 
-
-
 public class JiTT
 {
 	public static void main(String[] args)

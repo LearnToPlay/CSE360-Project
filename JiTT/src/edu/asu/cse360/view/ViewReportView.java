@@ -32,8 +32,7 @@ public class ViewReportView extends View
     {
     	report = new JPanel(); // clear old report, if any
     	report.setLayout(new BoxLayout(report, BoxLayout.Y_AXIS));
-    	JLabel title = new JLabel("<html><font size=\"5\">"
-    			+ getReportName() + "</font></html>");
+    	JLabel title = new JLabel("<html><h1>" + getReportName() + "</h1></html>");
     	report.add(title); // title of report
 
     	// TODO: ask Chris how he's planning to show his quizzes
@@ -71,25 +70,21 @@ public class ViewReportView extends View
 	    	report.add(barGraph);
 	    	
 	    	// More Dummy Filler Data: {
-	    	JPanel question2 = new JPanel();
-	    	question2.setLayout(new BoxLayout(question2, BoxLayout.Y_AXIS));
-	    	question2.add(new JLabel("Another Question 2"));
-	    	question2.add(new JLabel("A) Answer 1"));
-	    	question2.add(new JLabel("B) Answer 2"));
-	    	question2.add(new JLabel("<html><font color = \"green\">C) Answer 3</font></html>"));
-	    	question2.add(new JLabel("D) Answer 4"));
-	    	report.add(question2);
+	    	JLabel question2 = new JLabel("<html><br>Another Question 2" +
+	    			"<br>A) Answer 1" +
+	    			"<br>B) Answer 2" +
+	    			"<br><font color = \"green\">C) Answer 3</font>" +
+	    			"<br>D) Answer 4</html>");
 	    	JPanel barGraph2 = DrawBarGraph(0.1, 2);
-	    	report.add(barGraph2);
-	    	JPanel question3 = new JPanel();
-	    	question3.setLayout(new BoxLayout(question3, BoxLayout.Y_AXIS));
-	    	question3.add(new JLabel("Yet Another Generic Question That no one cares about 3"));
-	    	question3.add(new JLabel("A) Answer 1"));
-	    	question3.add(new JLabel("<html><font color = \"green\">B) Answer 2</font></html>"));
-	    	question3.add(new JLabel("C) Answer 3"));
-	    	question3.add(new JLabel("D) Answer 4"));
-	    	report.add(question3);
+	    	JLabel question3 = new JLabel("<html><br>Yet Another Generic Question That no one cares about 3" +
+	    			"<br>A) Answer 1" +
+	    			"<br><font color = \"green\">B) Answer 2</font>" +
+	    			"<br>C) Answer 3" +
+	    			"<br>D) Answer 4</html>");
 	    	JPanel barGraph3 = DrawBarGraph(0.1, 1);
+	    	report.add(question2);
+	    	report.add(barGraph2);
+	    	report.add(question3);
 	    	report.add(barGraph3);
 	    	// }
 	    
@@ -114,6 +109,7 @@ public class ViewReportView extends View
     // from ChartPanel.java example
     private class Graph extends JPanel
     {
+		private static final long serialVersionUID = 1L;
 		private String[] answers = {"A", "B", "C", "D"}; // should this be replaced by percentages?
     	private double[] values;
 		private int correct;
@@ -122,7 +118,7 @@ public class ViewReportView extends View
 		private Dimension d = new Dimension(300,100);
 	    private int clientWidth = (int)d.getWidth();
 		private int clientHeight = (int)d.getHeight();
-		private int bottom = 50; // bottom of bars
+		private int bottom = 30; // left side of bars, 50?
 		private int barHeight = clientHeight/4;
 		private int x = 10; // x position for labels
 		private int labelHeight = -10; // 10 originally

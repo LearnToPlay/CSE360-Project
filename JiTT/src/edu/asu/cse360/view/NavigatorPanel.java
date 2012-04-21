@@ -147,8 +147,12 @@ public class NavigatorPanel extends JFrame
             String toShow = "";
         	if(e.getSource() == CreateCourseButton)
             {
-            	JPanel CreateCourseCard = new CreateCourseView();
-                cards.add(CreateCourseCard, CARDPANEL1);
+        		// Code for setting up Model, View Controller:
+            	Model model = new CreateCourseMod();
+            	View view = new CreateCourseView();
+            	Controller CreateCourseCtrl = new CreateCourseCtrl(model, view);
+            	
+            	cards.add(view, CARDPANEL1);
                 toShow = CARDPANEL1;
             }
             else if(e.getSource() == CreateQuizButton)

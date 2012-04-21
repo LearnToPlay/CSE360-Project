@@ -3,7 +3,7 @@ package edu.asu.cse360.view;
 import java.awt.*;
 import javax.swing.*;
 
-public class CreateCourseView extends JPanel
+public class CreateCourseView extends View
 {
 	JList studentList;
 	JComboBox semester, availableStudents;
