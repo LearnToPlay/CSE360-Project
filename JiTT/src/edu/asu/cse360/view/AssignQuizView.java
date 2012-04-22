@@ -2,11 +2,13 @@ package edu.asu.cse360.view;
 
 
 import java.awt.*;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.TableModel;
 
-public class AssignQuizView extends JPanel
+public class AssignQuizView extends View
 {
 	JLabel title;
 	JComboBox timeBox1, timeBox2, timeBox3, timeBox4,
@@ -156,15 +158,35 @@ public class AssignQuizView extends JPanel
 		add(flow);
 		add(buttons);	
 	}
-	
-	public JButton getAssignButton(){
-		return assignButton;
-	}
+
 	
 	public void addComponentToPane(Container pane)
     {
 		pane.add(this);
 	}
+	
+	public String getQuizName(){
+		return text.getText();
+	}
+	
+	public JButton getAssignButton(){
+		return assignButton;
+	}
+	public void addAssignButtonListener(ActionListener a){
+		assignButton.addActionListener(a);
+	}
+	
+	public JButton getCancelButton(){
+		return cancelButton;
+	}
+	public void addCancelButtonListener(ActionListener a){
+		cancelButton.addActionListener(a);
+	}
+	
+	
+	
+	
+	
 	
 	private class listener implements TableModelListener // ListSelectionListener
 	{

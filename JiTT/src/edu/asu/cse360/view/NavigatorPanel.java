@@ -159,9 +159,9 @@ public class NavigatorPanel extends JFrame
             {
            //   JPanel CreateQuizCard = new CreateQuizView();
                 // CreateQuizCard.add(new JLabel("Create Quiz View Panel"));
-                 Model createQuizModel = new CreateQuizMod();
+                 Model createQuizModel = new CreateQuizModel();
                  View createQuizUI = new CreateQuizView();
-                 Controller createQuizController = new CreateQuizCtrl(createQuizModel,createQuizUI);
+                 Controller createQuizController = new CreateQuizController(createQuizModel,createQuizUI);
                 // createQuizController.attachButtons();
                // createQuizController.attachButtons(); 
                  cards.add(createQuizUI, CARDPANEL2);
