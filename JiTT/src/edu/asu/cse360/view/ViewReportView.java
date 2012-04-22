@@ -90,11 +90,7 @@ public class ViewReportView extends View
 	    	// }
 	    
 	    // place on this JPanel's view
-	    JScrollPane scroll = new JScrollPane(report);
-	    scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-	    Dimension d = new Dimension(500,300);
-	    scroll.setPreferredSize(d);
-	    add(scroll, BorderLayout.CENTER);
+	    add(report, BorderLayout.CENTER);
     	//validate() or revalidate()???
     	revalidate();
     }

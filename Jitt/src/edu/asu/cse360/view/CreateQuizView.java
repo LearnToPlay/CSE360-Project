@@ -1,3 +1,4 @@
+
 package edu.asu.cse360.view;
 
 import java.awt.BorderLayout;
@@ -991,6 +992,4 @@ public class CreateQuizView extends View{
 
 		}
 	}
-	
-
 }

@@ -1,6 +1,5 @@
 package edu.asu.cse360.data;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -95,7 +94,7 @@ public class Quiz extends SQLEntity {
 	public ArrayList<QuizContent> getContent() {
 		return content;
 	}
-	
+
 	public int insert() throws SQLException {
 		StringBuffer query = new StringBuffer();
 		if(quizName == null || quizName.length() < 1) {
