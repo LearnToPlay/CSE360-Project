@@ -25,7 +25,7 @@ public class NavigatorPanel extends JFrame
 
     public void addComponentToPane(Container pane)
     {
-    	// these will be contained in the OuterPane
+    	// these will be contained in the UpperPane
         JLabel hello = new JLabel("<html><font size = \"10\">Welcome to the JiTT Program</font><html>");
         hello.setHorizontalAlignment(JLabel.CENTER);
         LogoutButton = new JButton("Logout");
@@ -39,7 +39,12 @@ public class NavigatorPanel extends JFrame
         // Navigation Buttons. JMenu, JTree or whatever works best...
         JScrollPane navigationPane = new JScrollPane();
         
-        // Authentication a = new Authentication();
+        /*Authentication a = new Authentication();
+        if(a.getUser().isInstructor())
+        	navigationPane = createInstructorTree();
+        else
+        	navigationPane = createStudentTree();
+        */
         
         boolean redo = true;
         while(redo)
@@ -55,7 +60,6 @@ public class NavigatorPanel extends JFrame
 	        		);
 	        if(s.compareToIgnoreCase("instructor") == 0)
 	        {
-	        	//navigationPane = makeInstructor();
 	        	navigationPane = createInstructorTree();
 	        	redo = false;
 	        }
@@ -90,12 +94,12 @@ public class NavigatorPanel extends JFrame
     
     private JScrollPane createInstructorTree()
     {
-        // Create the nodes and a tree that allows one selection at a time.
+        // Create the tree for Edit Course
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Edit a Course");
         createCourseNodes(top);
         CreateCourseTree = new JTree(top);
         CreateCourseTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        CreateCourseTree.addTreeSelectionListener(new TreeListener()); //Listen for when the selection changes.
+        CreateCourseTree.addTreeSelectionListener(new TreeListener());
         
         // Create Quiz Button
         CreateQuizButton = new JButton(CARDPANEL2);
@@ -103,20 +107,20 @@ public class NavigatorPanel extends JFrame
         JPanel flow = new JPanel();
         flow.add(CreateQuizButton);
 
+        // Create the tree for View Quiz Report
         DefaultMutableTreeNode top2 = new DefaultMutableTreeNode("View Quiz Report");
         viewQuizReportNodes(top2);
         ViewReportTree = new JTree(top2);
         ViewReportTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        ViewReportTree.addTreeSelectionListener(new TreeListener()); //Listen for when the selection changes.
+        ViewReportTree.addTreeSelectionListener(new TreeListener());
                 
-        //Create the scroll pane and add the tree to it.
+        //Create the scroll pane and add the trees to it.
         JPanel treeView = new JPanel();
         treeView.setLayout(new GridLayout(3,1));
         treeView.add(CreateCourseTree);
         treeView.add(flow);
         treeView.add(ViewReportTree);
         JScrollPane toReturn = new JScrollPane(treeView);
-        
         return toReturn;
     }
     
@@ -141,10 +145,10 @@ public class NavigatorPanel extends JFrame
         treeView.add(TakeQuizTree);
         treeView.add(ViewScoresTree);
         JScrollPane toReturn = new JScrollPane(treeView);
-        
         return toReturn;
     }
     
+    /** change views **/
     private void displayURL(String url, String courseName, String quizName)
     {
     	System.out.println("Viewing: " + url + "\nCourse: " + courseName + "\nQuiz: " + quizName);
@@ -202,6 +206,8 @@ public class NavigatorPanel extends JFrame
     	htmlPane.updateUI(); // validate() or revalidate() ?
     }
 
+    /** this is where the trees will be instantiated/updated **/
+    /** TODO: Update the trees from the Database **/
     private void createCourseNodes(DefaultMutableTreeNode top)
     {
     	// TODO: get from Database the courses
@@ -286,6 +292,8 @@ public class NavigatorPanel extends JFrame
         category.add(book);
     }
 
+    
+    /** Listeners **/
     private class TreeListener implements TreeSelectionListener
     {
         /** Required by TreeSelectionListener interface. */
@@ -296,22 +304,26 @@ public class NavigatorPanel extends JFrame
         	
         	if(e.getSource() == CreateCourseTree)
         	{
+        		System.out.println(CARDPANEL1);
     	        node = (DefaultMutableTreeNode)CreateCourseTree.getLastSelectedPathComponent();
     	        toShow = CARDPANEL1;
         	}
         	else if(e.getSource() == ViewReportTree)
         	{
+        		System.out.println(CARDPANEL3);        		
     	        node = (DefaultMutableTreeNode)ViewReportTree.getLastSelectedPathComponent();
     	        toShow = CARDPANEL3;
         	}
         	else if(e.getSource() == TakeQuizTree)
         	{
-    	        node = (DefaultMutableTreeNode)ViewReportTree.getLastSelectedPathComponent();
+        		System.out.println(CARDPANEL4);
+        		node = (DefaultMutableTreeNode)TakeQuizTree.getLastSelectedPathComponent();
     	        toShow = CARDPANEL4;
         	}
         	else if(e.getSource() == ViewScoresTree)
         	{
-    	        node = (DefaultMutableTreeNode)ViewReportTree.getLastSelectedPathComponent();
+        		System.out.println(CARDPANEL5);        		
+    	        node = (DefaultMutableTreeNode)ViewScoresTree.getLastSelectedPathComponent();
     	        toShow = CARDPANEL5;
         	}
         	else
@@ -340,7 +352,7 @@ public class NavigatorPanel extends JFrame
             }
             else
             {
-                System.out.println("Unknown Source");
+                System.out.println("Unknown button Source");
             }
         }
     }
