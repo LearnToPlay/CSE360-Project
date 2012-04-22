@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import edu.asu.cse360.data.*;
-import edu.asu.cse360.model.CreateQuizMod;
+import edu.asu.cse360.model.CreateQuizModel;
 
 public class CreateQuizView extends View{
 	JButton createFromBlankButton;
@@ -36,14 +36,13 @@ public class CreateQuizView extends View{
 
 	private JPanel createQuizPanel;
 	private JPanel createFromExistPanel;
-	private JPanel assignPanel;
+	private AssignQuizView assignPanel;
 	private JPanel createFromBlankPanel;
 	boolean isCreateFromBlank = true;
 	boolean isAddingExistQuiz = false;
 	
 	int questionNumber = 1;
 	JLabel questionLabel = new JLabel("Question " + questionNumber + ": ");
-//	JLabel questionLabel = new JLabel();
 	JTextField questionText = new JTextField();	
 	JTextField answerAText = new JTextField();
 	JTextField answerBText = new JTextField();
@@ -72,27 +71,18 @@ public class CreateQuizView extends View{
 	JLabel quiz4CourseLabel;
 
 	//for newly created quiz
-	String[] questions;
-	String[][] answers;
-	String[] correctAnswer;
-	/*
-//	ArrayList<String> createdQuestions;
-//	ArrayList<ArrayList<String>> createdAnswers;
-//	ArrayList<String> answers;	
-//	
-//	ArrayList<String> existQuestions;
-//	ArrayList<ArrayList<String>> existAnswers;
-//	ArrayList<String> eAnswers;*/
-	
+//	String[] questions;
+//	String[][] answers;
+//	String[] correctAnswer;
+
 	//for exist quiz list
+	int page = 1;
+	int selectedQuizNumber;
 	Quiz[] existQuiz;
 	Quiz createdQuiz;
 	QuizContent[] createdQuizC;
 	ArrayList<QuizContent> createdQuizContent;
-	
-//    String[] existQuizList;
-//    String[] courseOfExistQuiz;
-    
+	Answers correctAnswer;
     // for exist quiz content    
     String[] existQuestions;
     String[][] existAnswers;
@@ -113,17 +103,14 @@ public class CreateQuizView extends View{
 	public CreateQuizView()
 	{
 		setLayout (new CardLayout());
-//		Othis = new JPanel(new CardLayout());
-//		Othis = this;
+
 		createFromBlankButton = new JButton("Create from Blank Quiz");
 		createFromExistingButton = new JButton("Create from Existing Quiz");
 		
 		ButtonListener listener = new ButtonListener();	
 		createFromBlankButton.addActionListener(listener);
 		createFromExistingButton.addActionListener(listener);
-		
-//		createFromBlankPanel = new CreateFromBlankView();
-//		createFromExistPanel = new ExistingQuizView();
+
 		assignPanel = new AssignQuizView();	
 		createQuizPanel = new JPanel();
 		JPanel flow1 = new JPanel();
@@ -148,11 +135,17 @@ public class CreateQuizView extends View{
     public JPanel getOthis(){
     	return Othis;
     }
+    public String getCARDPANEL1(){
+    	return CARDPANEL1;
+    }
     public String getCARDPANEL2(){
     	return CARDPANEL2;
     }
     public String getCARDPANEL3(){
     	return CARDPANEL3;
+    }
+    public JPanel getCreateQuizPanel(){
+    	return createQuizPanel;
     }
 	public JPanel getCreateFromBlankPanel(){
 		return createFromBlankPanel;
@@ -161,9 +154,12 @@ public class CreateQuizView extends View{
 	public JPanel getCreateFromExistPanel(){
 		return createFromExistPanel;
 	}
-	public JPanel getAssignPanel(){
+	
+	
+	public AssignQuizView getAssignView(){
 		return assignPanel;
 	}
+	
     
 	public void initializeB(){
 		questionNumber = 1;
@@ -253,36 +249,34 @@ public class CreateQuizView extends View{
 		numberOfExistQuiz = 0;
 		numberOfCreatedQuestions = 0;
 		quizNumber = 0; 
-		questions = null;
-		answers = null;
-		correctAnswer = null;
+//		questions = null;
+//		answers = null;
+//		correctAnswer = null;
 		existQuestions = null;
 		existAnswers = null;
 		existCorrectAnswer = null;
 //		existQuizList = null;
 //		courseOfExistQuiz = null;
 		existQuiz = null;
-		//radioButtonE.setSelected(true);
-		radioButtonE.doClick();
+		initializeQuestion();
 		
 		
 	}
 	
 	public boolean questionHasBlank(){
-		if(questionText.getText().equals("")||(answerAText.getText().equals(""))||(answerBText.getText().equals(""))||(answerBText.getText().equals(""))||(answerDText.getText().equals("")))
+		if(questionText.getText().equals("")||(answerAText.getText().equals(""))||(answerBText.getText().equals(""))||(answerCText.getText().equals(""))||(answerDText.getText().equals("")))
 			return true;
 		
 		else return false;
 	}
 	
-	public void saveQuizFromBlank()
+	public void saveQuiz()
 	{
 		
 		CardLayout c = (CardLayout)Othis.getLayout();
 		Othis.add(assignPanel,CARDPANEL3);
-		
-		if(isCreateFromBlank)
-		{
+//		if(isCreateFromBlank)
+//		{
 			//if some answers of a question are empty, then show up an alert message	
 			if((questionHasBlank())&&(questionNumber == 1))
 				JOptionPane.showMessageDialog(null,"Question or some answers are blank, please fill them in.");
@@ -290,33 +284,44 @@ public class CreateQuizView extends View{
 					JOptionPane.showMessageDialog(null,"Question or some answers are blank, please fill them in.");
 			else
 			{
+				
 				if(questionHasBlank())
 					;
 				else
 				{
+					
+					if(!(isCreateFromBlank))
+					{
+						System.out.println("through 33333333");
+						numberOfCreatedQuestions++;
+						numberOfCreatedQuestions += numberOfExistQuestions;
+						System.out.println("numberOfCreatedQuestions in Save: "+ numberOfCreatedQuestions);
+					}
 					//save the last question
 					if(questionNumber == numberOfCreatedQuestions)
 					{
+						System.out.println("through 4444444");
 						createdQuizC[questionNumber-1].setQuestion(questionText.getText());
 						createdQuiz.getContent().get(questionNumber-1).setAnswerA(answerAText.getText());
 						createdQuiz.getContent().get(questionNumber-1).setAnswerB(answerBText.getText());
 						createdQuiz.getContent().get(questionNumber-1).setAnswerC(answerCText.getText());
 						createdQuiz.getContent().get(questionNumber-1).setAnswerD(answerDText.getText());
-					}
-					
-
+						
+						c.show(Othis, CARDPANEL3);
+					}					
 				}		
+				
 				if(numberOfCreatedQuestions < numberOfQuestions)
 				{
 					int leftNumber;
 					leftNumber = numberOfQuestions - numberOfCreatedQuestions;
 					
+					System.out.println("number of question in save after if button: "+ numberOfQuestions);
+					System.out.println("number of created question in save after if button: "+ numberOfCreatedQuestions);
 					confirmD = JOptionPane.showConfirmDialog(null,"You can add "+ leftNumber +" more questions.Are sure finish editting?");
 					if(confirmD == JOptionPane.YES_OPTION)
-					{				
-						
-						setToNull();
-					
+					{										
+						setToNull();					
 						questionText.setText(null);
 						answerAText.setText(null);
 						answerBText.setText(null);
@@ -329,61 +334,59 @@ public class CreateQuizView extends View{
 				
 			}
 			
-		}	
+	//	}	
 		
 	}
 	
-	public void saveQuizFromExist(){
-		Quiz updateExistQuiz;
-		QuizContent[] updateC;
-		ArrayList<QuizContent> updateContent;
-		int updateNumberOfQuestions;
-		int count;
-		updateNumberOfQuestions = numberOfExistQuestions+numberOfCreatedQuestions;
-		updateExistQuiz = new Quiz();
-		updateC = new QuizContent[updateNumberOfQuestions];
-		updateContent = new ArrayList<QuizContent>();
-		
-		CardLayout c = (CardLayout)Othis.getLayout();
-		Othis.add(assignPanel,CARDPANEL3);
-		
-		for(int i=0; i<updateNumberOfQuestions; i++)
-		{
-			updateC[i] = new QuizContent();
-			//change --->  change 0 to real selected quiz 
-		}
-		
-		for(int i=0; i<updateNumberOfQuestions; i++)
-		{
-			updateContent.add(i, updateC[i]);
-			//change --->  change 0 to real selected quiz 
-		}
-		updateExistQuiz.setContent(updateContent);
-		
-		for(int i=0; i<numberOfExistQuestions;i++)
-		{
-			updateC[i].setQuestion(existQuiz[0].getContent().get(i).getQuestion());
-			updateC[i].setAnswerA(existQuiz[0].getContent().get(i).getAnswerA());
-			updateC[i].setAnswerB(existQuiz[0].getContent().get(i).getAnswerB());
-			updateC[i].setAnswerC(existQuiz[0].getContent().get(i).getAnswerC());
-			updateC[i].setAnswerD(existQuiz[0].getContent().get(i).getAnswerD());
-			System.out.println("updateC "+ i +" is: "+updateC[i].getQuestion());
-		}
-		for(int i=0; i<numberOfCreatedQuestions;i++)
-		{
-			count = numberOfExistQuestions+i;
-			updateC[count].setQuestion(createdQuiz.getContent().get(i).getQuestion());
-			updateC[count].setAnswerA(createdQuiz.getContent().get(i).getAnswerA());
-			updateC[count].setAnswerB(createdQuiz.getContent().get(i).getAnswerB());
-			updateC[count].setAnswerC(createdQuiz.getContent().get(i).getAnswerC());
-			updateC[count].setAnswerD(createdQuiz.getContent().get(i).getAnswerD());
-			System.out.println("updateC "+ count +" is: "+updateC[i].getQuestion());
-		}
-		
-		createdQuiz = updateExistQuiz;
-		c.show(Othis, CARDPANEL3);
-		System.out.println("createdQuiz is: "+createdQuiz.getContent().get(0).getQuestion());
-	}
+//	public void saveQuizFromExist(){
+//		Quiz updateExistQuiz;
+//		QuizContent[] updateC;
+//		ArrayList<QuizContent> updateContent;
+//		int updateNumberOfQuestions;
+//		int count;
+//		updateNumberOfQuestions = numberOfExistQuestions+numberOfCreatedQuestions;
+//		updateExistQuiz = new Quiz();
+//		updateC = new QuizContent[updateNumberOfQuestions];
+//		updateContent = new ArrayList<QuizContent>();
+//		
+//		CardLayout c = (CardLayout)Othis.getLayout();
+//		Othis.add(assignPanel,CARDPANEL3);
+//		
+//		for(int i=0; i<updateNumberOfQuestions; i++)
+//		{
+//			updateC[i] = new QuizContent();
+//		}
+//		
+//		for(int i=0; i<updateNumberOfQuestions; i++)
+//		{
+//			updateContent.add(i, updateC[i]);
+//		}
+//		updateExistQuiz.setContent(updateContent);
+//		
+//		for(int i=0; i<numberOfExistQuestions;i++)
+//		{
+//			updateC[i].setQuestion(existQuiz[selectedQuizNumber].getContent().get(i).getQuestion());
+//			updateC[i].setAnswerA(existQuiz[selectedQuizNumber].getContent().get(i).getAnswerA());
+//			updateC[i].setAnswerB(existQuiz[selectedQuizNumber].getContent().get(i).getAnswerB());
+//			updateC[i].setAnswerC(existQuiz[selectedQuizNumber].getContent().get(i).getAnswerC());
+//			updateC[i].setAnswerD(existQuiz[selectedQuizNumber].getContent().get(i).getAnswerD());
+//			System.out.println("updateC "+ i +" is: "+updateC[i].getQuestion());
+//		}
+//		for(int i=0; i<numberOfCreatedQuestions;i++)
+//		{
+//			count = numberOfExistQuestions+i;
+//			updateC[count].setQuestion(createdQuiz.getContent().get(i).getQuestion());
+//			updateC[count].setAnswerA(createdQuiz.getContent().get(i).getAnswerA());
+//			updateC[count].setAnswerB(createdQuiz.getContent().get(i).getAnswerB());
+//			updateC[count].setAnswerC(createdQuiz.getContent().get(i).getAnswerC());
+//			updateC[count].setAnswerD(createdQuiz.getContent().get(i).getAnswerD());
+//			System.out.println("updateC "+ count +" is: "+updateC[i].getQuestion());
+//		}
+//		
+//		createdQuiz = updateExistQuiz;
+//		c.show(Othis, CARDPANEL3);
+//		System.out.println("createdQuiz is: "+createdQuiz.getContent().get(0).getQuestion());
+//	}
 	
 	public class ExistingQuizView extends JPanel
 	{
@@ -397,13 +400,13 @@ public class CreateQuizView extends View{
 		{
 			//read in the number of Existing Quiz
 
-			quiz1 = new JRadioButton(existQuiz[0].getQuizName() + "   " + existQuiz[0].getCourseName());
+			quiz1 = new JRadioButton(existQuiz[0].getCourseName() + "   " + existQuiz[0].getQuizName());
 			quiz1.setSelected(true);
-			quiz2 = new JRadioButton(existQuiz[1].getQuizName() + "   " + existQuiz[1].getCourseName());
+			quiz2 = new JRadioButton(existQuiz[1].getCourseName() + "   " + existQuiz[1].getQuizName());
 			quiz2.setSelected(false);
-			quiz3 = new JRadioButton(existQuiz[2].getQuizName() + "   " + existQuiz[2].getCourseName());
+			quiz3 = new JRadioButton(existQuiz[2].getCourseName() + "   " + existQuiz[2].getQuizName());
 			quiz3.setSelected(false);
-			quiz4 = new JRadioButton(existQuiz[3].getQuizName() + "   " + existQuiz[3].getCourseName());
+			quiz4 = new JRadioButton(existQuiz[3].getCourseName() + "   " + existQuiz[3].getQuizName());
 			quiz4.setSelected(false);
 			
 			ButtonGroup group = new ButtonGroup();
@@ -451,9 +454,19 @@ public class CreateQuizView extends View{
 		private class RadioButtonListener implements ActionListener
 		{
 			public void actionPerformed(ActionEvent event) {
-
+				//parse the correct answer into Model Class
 				Object source = event.getSource();
-				//parse the quiz name with its course name of the selected quiz into Model Class
+				//correct answer = sourse --->  "A" or "B" or "C" or "D"
+				if(source == quiz1)
+				//	answerBText.setText("for testing!");
+					selectedQuizNumber = 0;
+				else if(source == quiz2)
+					selectedQuizNumber = 1;
+				else if(source == quiz3)
+					selectedQuizNumber = 2;
+				else if(source == quiz4)
+					selectedQuizNumber = 3;
+				System.out.println("selected quiz in radio button listener :" + selectedQuizNumber);//for testing!!!
 				
 			}
 			
@@ -568,6 +581,7 @@ public class CreateQuizView extends View{
 			add(answer);
 					
 		}
+		
 		private class RadioButtonListener implements ActionListener
 		{
 			public void actionPerformed(ActionEvent event) {
@@ -576,14 +590,14 @@ public class CreateQuizView extends View{
 				//correct answer = sourse --->  "A" or "B" or "C" or "D"
 				if(source == radioButtonA)
 				//	answerBText.setText("for testing!");
-					correctAnswer[questionNumber-1] = "A";
+					correctAnswer = Answers.A;
 				else if(source == radioButtonB)
-					correctAnswer[questionNumber-1] = "B";
+					correctAnswer = Answers.B;
 				else if(source == radioButtonC)
-					correctAnswer[questionNumber-1] = "C";
+					correctAnswer = Answers.C;
 				else if(source == radioButtonD)
-					correctAnswer[questionNumber-1] = "D";
-				System.out.println("correct answer is :" + correctAnswer[questionNumber-1]);//for testing!!!
+					correctAnswer = Answers.D;
+				System.out.println("correct answer is :" + correctAnswer.toString());//for testing!!!
 				
 			}
 			
@@ -606,6 +620,7 @@ public class CreateQuizView extends View{
 		answerBText.setText(null);
 		answerCText.setText(null);
 		answerDText.setText(null);	
+		radioButtonE.doClick();
 	}
 	
 	
@@ -616,6 +631,20 @@ public class CreateQuizView extends View{
 		answerCText.setText(quiz.getContent().get(i).getAnswerC());
 		answerDText.setText(quiz.getContent().get(i).getAnswerD());
 	}
+	
+	public void setAnswerUI(Answers a){
+		if(a == Answers.A)
+			radioButtonA.doClick();
+		else if(a == Answers.B)
+			radioButtonB.doClick();
+		else if(a == Answers.C)
+			radioButtonC.doClick();
+		else if(a == Answers.D)
+			radioButtonD.doClick();
+		else
+			radioButtonE.doClick();
+	}
+
 	
 	class ButtonListener implements ActionListener
 	{
@@ -635,7 +664,7 @@ public class CreateQuizView extends View{
 				questionLabel.setText("Question "+ questionNumber + ": ");				
 				
 				inputD = JOptionPane.showInputDialog("How many questions do you need?");		
-	//			numberOfQuestions = Integer.parseInt(inputD);
+
 				boolean isValid = false;
 				
 				if(inputD == null)
@@ -653,7 +682,7 @@ public class CreateQuizView extends View{
 						}
 						numberOfQuestions = inputD.charAt(i);
 						System.out.println("numberOfQuestions is: "+numberOfQuestions);
-					//	numberOfQuestions = Integer.parseInt(inputD);
+
 						if(numberOfQuestions <= 0)
 						{
 							JOptionPane.showMessageDialog(null,"Invalid input!");
@@ -680,8 +709,7 @@ public class CreateQuizView extends View{
 							}						
 							createdQuiz.setContent(createdQuizContent);
 							
-							//change --> real correct answer
-							correctAnswer = new String[numberOfQuestions];
+
 							c.show(Othis,CARDPANEL4);					
 						}
 													
@@ -713,16 +741,9 @@ public class CreateQuizView extends View{
 			{
 						
 				//parse existing quiz into create blank quiz page
-				setQuestionUI(existQuiz[0],0);
-				
-//				if(existCorrectAnswer[0].equals("A"))
-//					radioButtonA.setSelected(true);
-//				else if(existCorrectAnswer[0].equals("B"))
-//					radioButtonB.setSelected(true);
-//				else if(existCorrectAnswer[0].equals("C"))
-//					radioButtonC.setSelected(true);
-//				else if(existCorrectAnswer[0].equals("D"))
-//					radioButtonD.setSelected(true);
+				selectedQuizNumber += 4*(page-1);
+				setQuestionUI(existQuiz[selectedQuizNumber],0);
+				setAnswerUI(existQuiz[selectedQuizNumber].getContent().get(0).getCorrectAnswer());
 //				
 				isCreateFromBlank = false;
 				questionNumber = 1;
@@ -740,11 +761,12 @@ public class CreateQuizView extends View{
 				else
 				{
 					//parse in next 4 existing quiz names with their course names
+					page++;
 					quizNumber += 4;
-					quiz1.setText(existQuiz[quizNumber].getQuizName() + "   " + existQuiz[quizNumber].getCourseName());
+					quiz1.setText(existQuiz[quizNumber].getCourseName() + "   " + existQuiz[quizNumber].getQuizName());
 					if(quizNumber+1 < numberOfExistQuiz)
 					{
-						quiz2.setText(existQuiz[quizNumber+1].getQuizName()+ "   " + existQuiz[quizNumber+1].getCourseName());
+						quiz2.setText(existQuiz[quizNumber+1].getCourseName()+ "   " + existQuiz[quizNumber+1].getQuizName());
 					}					
 					else
 					{
@@ -753,7 +775,7 @@ public class CreateQuizView extends View{
 						
 					if(quizNumber+2 < numberOfExistQuiz)
 					{
-						quiz3.setText(existQuiz[quizNumber+2].getQuizName()+ "   " + existQuiz[quizNumber+2].getCourseName());
+						quiz3.setText(existQuiz[quizNumber+2].getCourseName()+ "   " + existQuiz[quizNumber+2].getQuizName());
 					}						
 					else
 					{
@@ -762,14 +784,12 @@ public class CreateQuizView extends View{
 					
 					if(quizNumber+3 < numberOfExistQuiz)
 					{
-						quiz4.setText(existQuiz[quizNumber+3].getQuizName()+ "   " + existQuiz[quizNumber+3].getCourseName());
+						quiz4.setText(existQuiz[quizNumber+3].getCourseName()+ "   " + existQuiz[quizNumber+3].getQuizName());
 					}				
 					else
 					{
 						quiz4.setText("No more quizzes.");
-					}
-						
-					
+					}					
 				}
 			
 			}
@@ -781,11 +801,12 @@ public class CreateQuizView extends View{
 				{
 					//parse in next 4 existing quiz names with their course names
 					quizNumber -= 4;
+					page--;
 					
-					quiz1.setText(existQuiz[quizNumber].getQuizName()+ "   " + existQuiz[quizNumber].getCourseName());
-					quiz2.setText(existQuiz[quizNumber+1].getQuizName()+ "   " + existQuiz[quizNumber+1].getCourseName());
-					quiz3.setText(existQuiz[quizNumber+2].getQuizName()+ "   " + existQuiz[quizNumber+2].getCourseName());
-					quiz4.setText(existQuiz[quizNumber+3].getQuizName()+ "   " + existQuiz[quizNumber+3].getCourseName());			
+					quiz1.setText(existQuiz[quizNumber].getCourseName()+ "   " + existQuiz[quizNumber].getQuizName());
+					quiz2.setText(existQuiz[quizNumber+1].getCourseName()+ "   " + existQuiz[quizNumber+1].getQuizName());
+					quiz3.setText(existQuiz[quizNumber+2].getCourseName()+ "   " + existQuiz[quizNumber+2].getQuizName());
+					quiz4.setText(existQuiz[quizNumber+3].getCourseName()+ "   " + existQuiz[quizNumber+3].getQuizName());			
 					
 				}
 			
@@ -793,50 +814,30 @@ public class CreateQuizView extends View{
 			
 			else if(event.getSource() == backButton)
 			{
-				
-				System.out.println("isCreateFromBlank: "+ isCreateFromBlank);
-				System.out.println("isAddingExistQuiz: "+ isAddingExistQuiz);
-				
-				
+								
 				if(questionNumber == 1)
 					JOptionPane.showMessageDialog(null,"This is the first question!");
 				else
 				{
+					System.out.println("number of question in back button: "+ numberOfQuestions);
+					System.out.println("number of created question in back button: "+ numberOfCreatedQuestions);
 					if(isCreateFromBlank||isAddingExistQuiz)
 					{
 					questionNumber -= 1;
 					questionLabel.setText("Question "+ questionNumber + ": ");
 
 					setQuestionUI(createdQuiz,questionNumber-1);
-								
-					//change --> parse in the correct answer
-//					if(existCorrectAnswer[questionNumber-1].equals("A"))
-//						radioButtonA.setSelected(true);
-//					else if(existCorrectAnswer[questionNumber-1].equals("B"))
-//						radioButtonB.setSelected(true);
-//					else if(existCorrectAnswer[questionNumber-1].equals("C"))
-//						radioButtonC.setSelected(true);
-//					else if(existCorrectAnswer[questionNumber-1].equals("D"))
-//						radioButtonD.setSelected(true);
-					
+					setAnswerUI(createdQuiz.getContent().get(questionNumber-1).getCorrectAnswer());					
 					}
 					else
 					{
 						questionNumber -= 1;
 						questionLabel.setText("Question "+ questionNumber + ": ");
 						
-						//change 0 to selected quiz ---> quiz name
-						setQuestionUI(existQuiz[0],questionNumber-1);
-					
-						//change --> parse in the correct answer
-//						if(existCorrectAnswer[questionNumber-1].equals("A"))
-//							radioButtonA.setSelected(true);
-//						else if(existCorrectAnswer[questionNumber-1].equals("B"))
-//							radioButtonB.setSelected(true);
-//						else if(existCorrectAnswer[questionNumber-1].equals("C"))
-//							radioButtonC.setSelected(true);
-//						else if(existCorrectAnswer[questionNumber-1].equals("D"))
-//							radioButtonD.setSelected(true);
+						
+						setQuestionUI(existQuiz[selectedQuizNumber],questionNumber-1);
+						setAnswerUI(existQuiz[selectedQuizNumber].getContent().get(questionNumber-1).getCorrectAnswer());
+
 					}
 				}
 			}
@@ -860,7 +861,9 @@ public class CreateQuizView extends View{
 								questionLabel.setText("Question "+ questionNumber + ": ");
 							
 								setQuestionUI(createdQuiz,questionNumber-1);
-
+								setAnswerUI(createdQuiz.getContent().get(questionNumber-1).getCorrectAnswer());
+								
+								System.out.println("numberOfCreatedQuestions in next 1111:"+ numberOfCreatedQuestions);
 							}
 							else
 							{	
@@ -868,7 +871,8 @@ public class CreateQuizView extends View{
 								System.out.println("numberOfQuestions = "+numberOfQuestions);
 
 								setQuizContent(createdQuiz,questionNumber-1);
-								
+								createdQuiz.getContent().get(questionNumber-1).setCorrectAnswer(correctAnswer);
+								System.out.println("correct answer of createdQuiz: "+ createdQuiz.getContent().get(questionNumber-1).getCorrectAnswer());
 								System.out.println("new question is: "+ createdQuiz.getContent().get(questionNumber-1).getQuestion());
 								questionNumber ++;								
 								
@@ -879,12 +883,14 @@ public class CreateQuizView extends View{
 									initializeQuestion();
 								}
 								else
+								{
+									numberOfCreatedQuestions ++;
 									setQuestionUI(createdQuiz,questionNumber-1);
-								
-								
-							}
-													
-							
+									setAnswerUI(createdQuiz.getContent().get(questionNumber-1).getCorrectAnswer());	
+								}
+																
+								System.out.println("numberOfCreatedQuestions in next 2222:"+ numberOfCreatedQuestions);
+							}																	
 						}
 					}	
 					
@@ -928,13 +934,11 @@ public class CreateQuizView extends View{
 											
 									}		
 									
-									//change--> real correct answer of the question
 									if(isValid)
 									{
 										numberOfQuestions = Integer.parseInt(inputD);
 										numberOfQuestions += numberOfExistQuestions;
-										
-										correctAnswer = new String[numberOfQuestions];								
+							
 										createdQuiz = new Quiz();
 										createdQuizC = new QuizContent[numberOfQuestions];
 										createdQuizContent = new ArrayList<QuizContent>();
@@ -951,12 +955,13 @@ public class CreateQuizView extends View{
 										
 										for(int k=0; k<numberOfExistQuestions; k++)
 										{
-											//change ---> change 0 to real exist quiz
-											createdQuiz.getContent().get(k).setQuestion(existQuiz[0].getContent().get(k).getQuestion());
-											createdQuiz.getContent().get(k).setAnswerA(existQuiz[0].getContent().get(k).getAnswerA());
-											createdQuiz.getContent().get(k).setAnswerB(existQuiz[0].getContent().get(k).getAnswerB());
-											createdQuiz.getContent().get(k).setAnswerC(existQuiz[0].getContent().get(k).getAnswerC());
-											createdQuiz.getContent().get(k).setAnswerD(existQuiz[0].getContent().get(k).getAnswerD());
+											//parse the exist quiz content into the created quiz
+											createdQuiz.getContent().get(k).setQuestion(existQuiz[selectedQuizNumber].getContent().get(k).getQuestion());
+											createdQuiz.getContent().get(k).setAnswerA(existQuiz[selectedQuizNumber].getContent().get(k).getAnswerA());
+											createdQuiz.getContent().get(k).setAnswerB(existQuiz[selectedQuizNumber].getContent().get(k).getAnswerB());
+											createdQuiz.getContent().get(k).setAnswerC(existQuiz[selectedQuizNumber].getContent().get(k).getAnswerC());
+											createdQuiz.getContent().get(k).setAnswerD(existQuiz[selectedQuizNumber].getContent().get(k).getAnswerD());
+											createdQuiz.getContent().get(k).setCorrectAnswer(existQuiz[selectedQuizNumber].getContent().get(k).getCorrectAnswer());
 										}
 										
 										questionNumber += 1;
@@ -965,30 +970,19 @@ public class CreateQuizView extends View{
 
 										isAddingExistQuiz = true;
 									}
-											
-										
+																					
 									}															
 						}
 					}
 						
 					else
 					{
-						//save the questions and answers into database
 						questionNumber += 1;
 						questionLabel.setText("Question "+ questionNumber + ": ");
 						//parse in next question with its answers				
-						//change 0 to what user selected---> quiz name
-						setQuestionUI(existQuiz[0],questionNumber-1);
+						setQuestionUI(existQuiz[selectedQuizNumber],questionNumber-1);
+						setAnswerUI(existQuiz[selectedQuizNumber].getContent().get(questionNumber-1).getCorrectAnswer());
 
-						
-//						if(existCorrectAnswer[questionNumber-1].equals("A"))
-//							radioButtonA.setSelected(true);
-//						else if(existCorrectAnswer[questionNumber-1].equals("B"))
-//							radioButtonB.setSelected(true);
-//						else if(existCorrectAnswer[questionNumber-1].equals("C"))
-//							radioButtonC.setSelected(true);
-//						else if(existCorrectAnswer[questionNumber-1].equals("D"))
-//							radioButtonD.setSelected(true);
 
 					}
 				}
@@ -1000,4 +994,3 @@ public class CreateQuizView extends View{
 	
 
 }
-
